@@ -1,6 +1,40 @@
 @echo off
 setlocal enabledelayedexpansion
 
+rem Define the URL of the GitHub repository
+set "repo_url=https://github.com/YourUsername/MiddleEastBlocker.git"
+set "script_name=blocker.bat"
+
+rem Define the directory to clone the repository
+set "clone_dir=%temp%\MiddleEastBlocker"
+
+rem Define the path to the current script
+set "current_script=%~f0"
+
+rem Function to check and update the script
+:check_and_update
+cls
+echo ========================================================
+echo Checking for updates...
+echo ========================================================
+rem Check if the update script exists in the repository
+if exist "%clone_dir%\%script_name%" (
+    echo Found new version. Updating...
+    copy /y "%clone_dir%\%script_name%" "%current_script%"
+    rd /s /q "%clone_dir%"
+    echo ========================================================
+    echo Update completed. Restarting the script...
+    echo ========================================================
+    call "%current_script%"
+    exit /b
+)
+
+rem Proceed with the rest of the script
+goto main_menu
+
+rem Call the update check function
+call :check_and_update
+
 rem Define the list of IP Prefixes
 set "ips=15.184.0.0/16 15.185.0.0/16 16.24.0.0/16 157.175.0.0/16 51.16.0.0/15 51.84.0.0/16 51.85.0.0/16 15.220.160.0/21 3.28.0.0/15 40.172.0.0/16 51.112.0.0/16"
 
@@ -98,12 +132,6 @@ cls
 echo ========================================================
 echo                    Updating Script...
 echo ========================================================
-rem Define the URL of the GitHub repository
-set "repo_url=https://github.com/YourUsername/MiddleEastBlocker.git"
-
-rem Define the directory to clone the repository
-set "clone_dir=%temp%\MiddleEastBlocker"
-
 rem Check if the directory exists, if yes, delete it
 if exist "%clone_dir%" (
     rd /s /q "%clone_dir%"
@@ -112,14 +140,9 @@ if exist "%clone_dir%" (
 rem Clone the repository
 git clone "%repo_url%" "%clone_dir%"
 
-rem Copy the updated script to the current directory
-copy /y "%clone_dir%\blocker.bat" "%~dp0"
+rem Call the update check function
+call :check_and_update
 
-rem Clean up
-rd /s /q "%clone_dir%"
-
-echo ========================================================
-echo Script updated successfully.
 echo ========================================================
 pause
 goto main_menu
@@ -130,5 +153,3 @@ echo ========================================================
 echo                    Exiting...
 echo ========================================================
 endlocal
-
-test23
