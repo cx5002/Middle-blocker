@@ -98,25 +98,24 @@ cls
 echo ========================================================
 echo                    Updating Script...
 echo ========================================================
-rem Define the URL of the GitHub repository
-set "repo_url=https://github.com/cx5002/Middle-blocker.git"
+rem Define the URL of the GitHub raw file
+set "raw_url=https://raw.githubusercontent.com/cx5002/Middle-blocker/master/Blocker.cmd"
 
-rem Define the directory to clone the repository
-set "clone_dir=%temp%\MiddleEastBlocker"
+rem Define the path to download the updated script
+set "download_path=%temp%\Blocker.cmd"
 
-rem Check if the directory exists, if yes, delete it
-if exist "%clone_dir%" (
-    rd /s /q "%clone_dir%"
+rem Use PowerShell to download the updated script
+powershell -Command "Invoke-WebRequest -Uri '%raw_url%' -OutFile '%download_path%'"
+
+rem Check if the download was successful
+if not exist "%download_path%" (
+    echo Failed to download the updated script. Please check your network connection and try again.
+    pause
+    goto main_menu
 )
 
-rem Clone the repository
-git clone "%repo_url%" "%clone_dir%"
-
-rem Copy the updated script to the current directory
-copy /y "%clone_dir%\Blocker.cmd" "%~dp0"
-
-rem Clean up
-rd /s /q "%clone_dir%"
+rem Replace the current script with the updated script
+copy /y "%download_path%" "%~dp0"
 
 echo ========================================================
 echo Script updated successfully.
@@ -130,5 +129,3 @@ echo ========================================================
 echo                    Exiting...
 echo ========================================================
 endlocal
-
-test334
