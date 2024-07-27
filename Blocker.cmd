@@ -10,7 +10,6 @@ echo ========================================================
 echo            Middle-East Blocker - By hosseine3
 echo ========================================================
 echo.
-echo Hosseine3
 echo 1. Block Middle-East
 echo 2. Unblock Middle-East
 echo 3. Check Middle-East Connection
