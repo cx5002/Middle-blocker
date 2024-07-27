@@ -130,7 +130,3 @@ echo                    Exiting...
 echo ========================================================
 endlocal
 
-hosseine3
-
-Enjoy it
-
