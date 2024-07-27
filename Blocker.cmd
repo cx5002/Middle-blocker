@@ -1,15 +1,15 @@
 @echo off
 setlocal enabledelayedexpansion
 
-rem Define the URL of the GitHub repository
-set "repo_url=https://github.com/YourUsername/MiddleEastBlocker.git"
-set "script_name=blocker.bat"
+rem Define URLs
+set "repo_url=https://github.com/YourUsername/MiddleEastBlocker/raw/main"
+set "version_file_url=%repo_url%/version.txt"
+set "script_file_url=%repo_url%/%~nx0"
+set "version_file=%temp%\version.txt"
+set "script_file=%temp%\%~nx0"
 
-rem Define the directory to clone the repository
-set "clone_dir=%temp%\MiddleEastBlocker"
-
-rem Define the path to the current script
-set "current_script=%~f0"
+rem Get the current script version
+set "current_version=1.0"  rem Set the current version of the script here
 
 rem Function to check and update the script
 :check_and_update
@@ -17,16 +17,31 @@ cls
 echo ========================================================
 echo Checking for updates...
 echo ========================================================
-rem Check if the update script exists in the repository
-if exist "%clone_dir%\%script_name%" (
-    echo Found new version. Updating...
-    copy /y "%clone_dir%\%script_name%" "%current_script%"
-    rd /s /q "%clone_dir%"
+rem Download the version file
+powershell -Command "(New-Object System.Net.WebClient).DownloadFile('%version_file_url%', '%version_file%')"
+
+rem Read the version from the file
+set /p new_version=<"%version_file%"
+
+rem Compare versions
+if "%current_version%" NEQ "%new_version%" (
+    echo A new version (%new_version%) is available. Updating...
+    rem Download the new script file
+    powershell -Command "(New-Object System.Net.WebClient).DownloadFile('%script_file_url%', '%script_file%')"
+    
+    rem Replace the old script with the new one
+    move /y "%script_file%" "%~f0"
+    
+    rem Clean up
+    del "%version_file%"
+
     echo ========================================================
     echo Update completed. Restarting the script...
     echo ========================================================
-    call "%current_script%"
+    call "%~f0"
     exit /b
+) else (
+    echo You are already using the latest version (%current_version%).
 )
 
 rem Proceed with the rest of the script
@@ -132,17 +147,8 @@ cls
 echo ========================================================
 echo                    Updating Script...
 echo ========================================================
-rem Check if the directory exists, if yes, delete it
-if exist "%clone_dir%" (
-    rd /s /q "%clone_dir%"
-)
-
-rem Clone the repository
-git clone "%repo_url%" "%clone_dir%"
-
 rem Call the update check function
 call :check_and_update
-
 echo ========================================================
 pause
 goto main_menu
@@ -153,5 +159,3 @@ echo ========================================================
 echo                    Exiting...
 echo ========================================================
 endlocal
-
-test56
