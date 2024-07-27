@@ -1,6 +1,18 @@
 @echo off
 setlocal enabledelayedexpansion
 
+:: Check for administrator privileges
+openfiles >nul 2>&1
+if %errorlevel% neq 0 (
+    echo **************************************************************
+    echo This script requires administrator privileges. Restarting as administrator...
+    echo **************************************************************
+    pause
+    :: Restart the script with administrator privileges
+    powershell -Command "Start-Process '%~dpnx0' -Verb RunAs"
+    exit /b
+)
+
 rem Define the list of IP Prefixes
 set "ips=15.184.0.0/16 15.185.0.0/16 16.24.0.0/16 157.175.0.0/16 51.16.0.0/15 51.84.0.0/16 51.85.0.0/16 15.220.160.0/21 3.28.0.0/15 40.172.0.0/16 51.112.0.0/16"
 
@@ -129,5 +141,3 @@ echo ========================================================
 echo                    Exiting...
 echo ========================================================
 endlocal
-
-updated
