@@ -99,7 +99,7 @@ echo ========================================================
 echo                    Updating Script...
 echo ========================================================
 rem Define the URL of the GitHub repository
-set "repo_url=https://github.com/YourUsername/MiddleEastBlocker.git"
+set "repo_url=https://github.com/cx5002/Middle-blocker.git"
 
 rem Define the directory to clone the repository
 set "clone_dir=%temp%\MiddleEastBlocker"
@@ -113,7 +113,7 @@ rem Clone the repository
 git clone "%repo_url%" "%clone_dir%"
 
 rem Copy the updated script to the current directory
-copy /y "%clone_dir%\blocker.bat" "%~dp0"
+copy /y "%clone_dir%\Blocker.cmd" "%~dp0"
 
 rem Clean up
 rd /s /q "%clone_dir%"
@@ -130,4 +130,3 @@ echo ========================================================
 echo                    Exiting...
 echo ========================================================
 endlocal
-2sada
