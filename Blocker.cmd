@@ -13,7 +13,7 @@ echo.
 echo 1. Block Middle-East
 echo 2. Unblock Middle-East
 echo 3. Check Middle-East Connection
-echo 4. Checking For Updateri
+echo 4. Checking For Update
 echo 5. Quit
 echo ========================================================
 echo.
@@ -130,3 +130,4 @@ echo                    Exiting...
 echo ========================================================
 endlocal
 
+Hosseine3
