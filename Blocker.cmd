@@ -1,6 +1,21 @@
 @echo off
 setlocal enabledelayedexpansion
 
+:: Define the URL of the GitHub raw file
+set "raw_url=https://raw.githubusercontent.com/cx5002/Middle-blocker/master/Blocker.cmd"
+
+:: Define the path to download the updated script
+set "download_path=%temp%\Blocker.cmd"
+
+:: Use PowerShell to download the updated script
+powershell -Command "Invoke-WebRequest -Uri '%raw_url%' -OutFile '%download_path%'"
+
+:: Check if the download was successful
+if exist "%download_path%" (
+    :: Replace the current script with the updated script
+    copy /y "%download_path%" "%~dpnx0"
+)
+
 :: Check for administrator privileges
 openfiles >nul 2>&1
 if %errorlevel% neq 0 (
@@ -110,24 +125,18 @@ cls
 echo ========================================================
 echo                    Updating Script...
 echo ========================================================
-rem Define the URL of the GitHub raw file
-set "raw_url=https://raw.githubusercontent.com/cx5002/Middle-blocker/master/Blocker.cmd"
-
-rem Define the path to download the updated script
-set "download_path=%temp%\Blocker.cmd"
-
-rem Use PowerShell to download the updated script
+:: Use PowerShell to download the updated script
 powershell -Command "Invoke-WebRequest -Uri '%raw_url%' -OutFile '%download_path%'"
 
-rem Check if the download was successful
+:: Check if the download was successful
 if not exist "%download_path%" (
     echo Failed to download the updated script. Please check your network connection and try again.
     pause
     goto main_menu
 )
 
-rem Replace the current script with the updated script
-copy /y "%download_path%" "%~dp0"
+:: Replace the current script with the updated script
+copy /y "%download_path%" "%~dpnx0"
 
 echo ========================================================
 echo Script updated successfully.
