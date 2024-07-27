@@ -13,7 +13,7 @@ echo.
 echo 1. Block Middle-East
 echo 2. Unblock Middle-East
 echo 3. Check Middle-East Connection
-echo 4. Checking For Update
+echo 4. Checking For Updater
 echo 5. Quit
 echo ========================================================
 echo.
