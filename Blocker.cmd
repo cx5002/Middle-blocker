@@ -51,11 +51,10 @@ echo 4. Show IP List
 echo 5. Add IP to List
 echo 6. Remove IP from List
 echo 7. Reset to Default
-echo 8. Checking For Update
-echo 9. Quit
+echo 8. Quit
 echo ========================================================
 echo.
-set /p choice="Select an option [1-9]: "
+set /p choice="Select an option [1-8]: "
 
 if "%choice%"=="1" goto block_ips
 if "%choice%"=="2" goto unblock_ips
@@ -64,8 +63,7 @@ if "%choice%"=="4" goto show_ips
 if "%choice%"=="5" goto add_ip
 if "%choice%"=="6" goto remove_ip
 if "%choice%"=="7" goto reset_ips
-if "%choice%"=="8" goto update_script
-if "%choice%"=="9" goto end
+if "%choice%"=="8" goto end
 
 echo Invalid choice. Please select a valid option.
 pause
@@ -204,30 +202,6 @@ echo                Resetting to Default IPs
 echo ========================================================
 set "ips=%default_ips%"
 echo IP list reset to default successfully.
-echo ========================================================
-pause
-goto main_menu
-
-:update_script
-cls
-echo ========================================================
-echo                    Updating Script...
-echo ========================================================
-:: Use PowerShell to download the updated script
-powershell -Command "Invoke-WebRequest -Uri '%raw_url%' -OutFile '%download_path%'"
-
-:: Check if the download was successful
-if not exist "%download_path%" (
-    echo Failed to download the updated script. Please check your network connection and try again.
-    pause
-    goto main_menu
-)
-
-:: Replace the current script with the updated script
-copy /y "%download_path%" "%~dpnx0"
-
-echo ========================================================
-echo Script updated successfully.
 echo ========================================================
 pause
 goto main_menu
