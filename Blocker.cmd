@@ -1,6 +1,7 @@
 @echo off
 setlocal enabledelayedexpansion
 
+
 :: Define the URL of the GitHub raw file
 set "raw_url=https://raw.githubusercontent.com/cx5002/Middle-blocker/master/Blocker.cmd"
 
@@ -51,10 +52,11 @@ echo 4. Show IP List
 echo 5. Add IP to List
 echo 6. Remove IP from List
 echo 7. Reset to Default
-echo 8. Quit
+echo 8. Change DNS
+echo 9. Quit
 echo ========================================================
 echo.
-set /p choice="Select an option [1-8]: "
+set /p choice="Select an option [1-9]: "
 
 if "%choice%"=="1" goto block_ips
 if "%choice%"=="2" goto unblock_ips
@@ -63,7 +65,8 @@ if "%choice%"=="4" goto show_ips
 if "%choice%"=="5" goto add_ip
 if "%choice%"=="6" goto remove_ip
 if "%choice%"=="7" goto reset_ips
-if "%choice%"=="8" goto end
+if "%choice%"=="8" goto change_dns
+if "%choice%"=="9" goto end
 
 echo Invalid choice. Please select a valid option.
 pause
@@ -206,11 +209,68 @@ echo ========================================================
 pause
 goto main_menu
 
+:change_dns
+cls
+echo ========================================================
+echo                  Change DNS Settings
+echo ========================================================
+rem List network adapters using PowerShell
+echo Network Adapters:
+echo -----------------
+powershell -Command "Get-NetAdapter -Physical | ForEach-Object {Write-Host "$($_.ifIndex): $($_.Name)"}"
+set /p adapter_choice="Select an Connected Adapter: "
+
+rem  DNS List 
+echo ========================================================
+echo DNS Options:
+echo 1. Google: 8.8.8.8, 8.8.4.4
+echo 2. Cloudflare: 1.1.1.1, 1.0.0.1
+echo 3. Electro: 78.157.42.100, 78.157.42.101
+echo 4. Custom
+echo 5. Reset DNS
+echo ========================================================
+set /p dns_choice="Select a DNS option [1-5]: "
+
+if "%dns_choice%"=="1" (
+    set "dns1=8.8.8.8"
+    set "dns2=8.8.4.4"
+) else if "%dns_choice%"=="2" (
+    set "dns1=1.1.1.1"
+    set "dns2=1.0.0.1"
+) else if "%dns_choice%"=="3" (
+    set "dns1=78.157.42.100"
+    set "dns2=78.157.42.101"
+) else if "%dns_choice%"=="4" (
+    set /p dns1="Enter primary DNS: "
+    set /p dns2="Enter secondary DNS: "
+) else if "%dns_choice%"=="5" (
+    set "dns1="
+    set "dns2="
+) else (
+    echo Invalid choice. Returning to main menu.
+    pause
+    goto main_menu
+)
+
+rem Change DNS settings for the selected adapter
+echo Changing DNS for adapter index: %adapter_choice%
+if "%dns_choice%"=="5" (
+    powershell -Command "Set-DnsClientServerAddress -InterfaceIndex %adapter_choice% -ResetServerAddresses"
+) else (
+    powershell -Command "Set-DnsClientServerAddress -InterfaceIndex %adapter_choice% -ServerAddresses @('%dns1%', '%dns2%')"
+)
+if %errorlevel% neq 0 (
+    echo Failed to change DNS settings. Please check your network settings.
+) else (
+    echo DNS settings changed successfully.
+)
+echo ========================================================
+pause
+goto main_menu
+
 :end
 cls
 echo ========================================================
 echo                    Exiting...
 echo ========================================================
 endlocal
-
-95cv85
