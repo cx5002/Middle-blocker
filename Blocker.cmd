@@ -15,7 +15,7 @@ if %errorlevel% neq 0 (
     echo **************************************************************
     pause
     :: Restart the script with administrator privileges
-    powershell -Command "Start-Process '%~dpnx0' -Verb RunAs"
+    powershell -Command "Start-Process '%~dpnx0%' -Verb RunAs"
     exit /b
 )
 
@@ -25,7 +25,7 @@ powershell -Command "Invoke-WebRequest -Uri '%raw_url%' -OutFile '%download_path
 :: Check if the download was successful
 if exist "%download_path%" (
     :: Replace the current script with the updated script
-    copy /y "%download_path%" "%~dpnx0"
+    copy /y "%download_path%" "%~dpnx0%"
 )
 
 :: Define default list of IP Prefixes
@@ -210,7 +210,7 @@ echo ========================================================
 :: List network adapters using PowerShell
 echo Network Adapters:
 echo -----------------
-powershell -Command "Get-NetAdapter -Physical | ForEach-Object {Write-Host ""$($_.ifIndex): $($_.Name)""}"
+powershell -Command "Get-NetAdapter -Physical | ForEach-Object {Write-Host \"$($_.ifIndex): $($_.Name)\"}"
 set /p adapter_choice="Select a Connected Adapter (Enter Index): "
 
 :: DNS Options
@@ -267,4 +267,4 @@ echo ========================================================
 echo                    Exiting...
 echo ========================================================
 endlocal
-ssd
+dos
