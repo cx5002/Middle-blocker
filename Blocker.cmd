@@ -1,7 +1,6 @@
 @echo off
 setlocal enabledelayedexpansion
 
-
 :: Define the URL of the GitHub raw file
 set "raw_url=https://raw.githubusercontent.com/cx5002/Middle-blocker/master/Blocker.cmd"
 
@@ -16,7 +15,6 @@ if exist "%download_path%" (
     :: Replace the current script with the updated script
     copy /y "%download_path%" "%~dpnx0"
 )
-
 
 :: Check for administrator privileges
 openfiles >nul 2>&1
