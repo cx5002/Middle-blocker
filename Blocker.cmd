@@ -25,16 +25,7 @@ powershell -Command "Invoke-WebRequest -Uri '%raw_url%' -OutFile '%download_path
 :: Check if the download was successful
 if exist "%download_path%" (
     :: Replace the current script with the updated script
-    copy /y "%download_path%" "%~f0" >nul 2>&1
-    if %errorlevel% neq 0 (
-        echo Failed to replace the script. Please check file permissions.
-        pause
-        exit /b
-    )
-) else (
-    echo Failed to download the updated script. Please check your network connection.
-    pause
-    exit /b
+    copy /y "%download_path%" "%~dpnx0%"
 )
 
 :: Define default list of IP Prefixes
@@ -90,14 +81,14 @@ set "ip_list=%ip_list:~1%"
 
 :: Add the block rules
 echo Adding rules to block IP Prefixes...
-netsh advfirewall firewall add rule name="Middle-East Blocker" dir=in action=block remoteip=%ip_list% >nul 2>&1
+netsh advfirewall firewall add rule name="Middle-East Blocker" dir=in action=block remoteip=%ip_list%
 if %errorlevel% neq 0 (
     echo Failed to add inbound rules. Please check your firewall settings.
 ) else (
     echo Inbound rules added successfully.
 )
 
-netsh advfirewall firewall add rule name="Middle-East Blocker" dir=out action=block remoteip=%ip_list% >nul 2>&1
+netsh advfirewall firewall add rule name="Middle-East Blocker" dir=out action=block remoteip=%ip_list%
 if %errorlevel% neq 0 (
     echo Failed to add outbound rules. Please check your firewall settings.
 ) else (
@@ -114,7 +105,7 @@ echo                    Unblocking IPs...
 echo ========================================================
 :: Remove the block rules
 echo Removing rules to unblock IP Prefixes...
-netsh advfirewall firewall delete rule name="Middle-East Blocker" >nul 2>&1
+netsh advfirewall firewall delete rule name="Middle-East Blocker"
 if %errorlevel% neq 0 (
     echo Failed to remove rules. Please check your firewall settings.
 ) else (
@@ -276,4 +267,4 @@ echo ========================================================
 echo                    Exiting...
 echo ========================================================
 endlocal
-ksd
+dos
